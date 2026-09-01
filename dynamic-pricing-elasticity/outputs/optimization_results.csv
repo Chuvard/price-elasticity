@@ -1,0 +1,126 @@
+product_category,customer_segment,region,elasticity_used,elasticity_source,p_value,current_price,recommended_price,recommended_price_change_pct,expected_demand_change_pct,current_margin_pct,baseline_revenue,baseline_gross_profit,expected_revenue_impact,expected_gross_profit_impact,recommendation_type
+Industrial Treatment,Distributors,North,-0.9169,segment_region,0.0,199.1,219.01,10.0,-8.37,42.42,116475.5,49410.13,925.78,6537.77,Increase price: low elasticity / pricing power
+Industrial Treatment,Distributors,South,-1.2717,segment_region,0.0,199.2,219.12,10.0,-11.41,42.45,138245.31,58684.0,-3534.26,5547.36,Hold price: no clear improvement
+Industrial Treatment,Small Business,North,-0.7132,segment_region,0.0,198.48,218.32,10.0,-6.57,42.24,81971.26,34624.26,2271.26,5382.71,Increase price: low elasticity / pricing power
+Industrial Treatment,Distributors,Northeast,-1.0054,segment_region,0.0,197.55,217.31,10.0,-9.14,41.97,101542.13,42616.31,-52.01,5332.08,Hold price: no clear improvement
+Industrial Treatment,Homeowners,North,-1.1713,segment_region,0.0,196.56,216.21,10.0,-10.56,41.67,114592.21,47756.12,-1856.12,5203.8,Hold price: no clear improvement
+Industrial Treatment,Distributors,Midwest,-1.0429,segment_region,0.0,198.56,218.42,10.0,-9.46,42.26,101465.27,42883.38,-414.24,5128.58,Hold price: no clear improvement
+Commercial Systems,Distributors,North,-0.9169,segment_region,0.0,116.34,127.98,10.0,-8.37,38.65,74577.09,28822.51,592.76,4421.47,Increase price: low elasticity / pricing power
+Industrial Treatment,Homeowners,Northeast,-1.2671,segment_region,0.0,196.19,215.81,10.0,-11.38,41.57,99075.23,41181.18,-2490.59,4095.34,Hold price: no clear improvement
+Commercial Systems,Distributors,South,-1.2717,segment_region,0.0,114.94,126.44,10.0,-11.41,37.9,89884.38,34065.22,-2297.91,4073.64,Hold price: no clear improvement
+Industrial Treatment,Homeowners,Midwest,-1.3334,segment_region,0.0,195.12,214.63,10.0,-11.93,41.25,101854.26,42011.31,-3185.26,3956.09,Hold price: no clear improvement
+Commercial Systems,Distributors,Midwest,-1.0429,segment_region,0.0,116.26,127.88,10.0,-9.46,38.6,73124.72,28226.7,-298.54,3949.56,Hold price: no clear improvement
+Industrial Treatment,Industrial Accounts,North,-0.219,segment_region,0.0,200.57,220.63,10.0,-2.07,42.84,44326.27,18990.46,3425.42,3948.67,Increase price: low elasticity / pricing power
+Industrial Treatment,Industrial Accounts,Northeast,-0.2413,segment_region,0.0027,204.24,224.67,10.0,-2.27,43.87,44525.27,19533.39,3338.88,3907.03,Increase price: low elasticity / pricing power
+Industrial Treatment,Small Business,South,-1.2159,segment_region,0.0,201.73,221.91,10.0,-10.94,43.17,93200.67,40236.22,-1897.8,3897.39,Hold price: no clear improvement
+Commercial Systems,Distributors,Northeast,-1.0054,segment_region,0.0,114.9,126.39,10.0,-9.14,37.88,68249.36,25849.64,-34.96,3839.13,Hold price: no clear improvement
+Industrial Treatment,Industrial Accounts,Midwest,-0.2816,segment_region,0.0004,202.29,222.51,10.0,-2.65,43.33,43895.91,19018.66,3110.72,3769.5,Increase price: low elasticity / pricing power
+Industrial Treatment,Small Business,Northeast,-1.0742,segment_region,0.0,198.28,218.11,10.0,-9.73,42.18,75742.34,31949.22,-533.49,3727.94,Hold price: no clear improvement
+Industrial Treatment,Municipal,Midwest,-0.5641,segment_region,0.0,200.36,220.39,10.0,-5.23,42.78,51492.02,22029.11,2184.23,3726.39,Increase price: low elasticity / pricing power
+Industrial Treatment,Distributors,West,-1.5828,segment_region,0.0,199.1,219.01,10.0,-14.0,42.42,134590.94,57093.18,-7272.06,3579.51,Hold price: no clear improvement
+Commercial Systems,Small Business,North,-0.7132,segment_region,0.0,117.34,129.08,10.0,-6.57,39.17,52334.96,20499.48,1450.1,3542.19,Increase price: low elasticity / pricing power
+Industrial Treatment,Municipal,North,-0.7185,segment_region,0.0,199.97,219.97,10.0,-6.62,42.67,53791.88,22953.27,1462.5,3503.66,Increase price: low elasticity / pricing power
+Commercial Systems,Homeowners,North,-1.1713,segment_region,0.0,115.06,126.57,10.0,-10.56,37.96,69496.41,26382.89,-1125.67,3428.42,Hold price: no clear improvement
+Industrial Treatment,Small Business,Midwest,-1.2124,segment_region,0.0,200.23,220.25,10.0,-10.91,42.74,80290.67,34319.36,-1608.91,3407.57,Hold price: no clear improvement
+Industrial Treatment,Homeowners,South,-1.5775,segment_region,0.0,195.79,215.37,10.0,-13.96,41.45,119234.93,49418.15,-6384.9,3360.56,Hold price: no clear improvement
+Industrial Treatment,Industrial Accounts,West,-0.727,segment_region,0.0,201.8,221.98,10.0,-6.69,43.19,51459.39,22225.76,1356.69,3313.51,Increase price: low elasticity / pricing power
+Industrial Treatment,Municipal,South,-0.9381,segment_region,0.0,200.98,221.08,10.0,-8.55,42.96,59290.32,25471.02,350.85,3243.26,Increase price: low elasticity / pricing power
+Industrial Treatment,Industrial Accounts,South,-0.7628,segment_region,0.0,202.66,222.93,10.0,-7.01,43.43,50260.06,21828.93,1149.22,3142.76,Increase price: low elasticity / pricing power
+Commercial Systems,Homeowners,Northeast,-1.2671,segment_region,0.0,114.22,125.64,10.0,-11.38,37.5,67843.79,25444.07,-1705.48,3117.84,Hold price: no clear improvement
+Commercial Systems,Homeowners,Midwest,-1.3334,segment_region,0.0,114.7,126.17,10.0,-11.93,37.77,68592.4,25907.16,-2145.07,2948.77,Hold price: no clear improvement
+Industrial Treatment,Municipal,Northeast,-0.7777,segment_region,0.0,202.58,222.83,10.0,-7.14,43.41,47605.3,20664.51,1019.16,2943.88,Increase price: low elasticity / pricing power
+Commercial Systems,Small Business,South,-1.2159,segment_region,0.0,117.17,128.89,10.0,-10.94,39.08,63272.15,24726.95,-1288.38,2929.1,Hold price: no clear improvement
+Commercial Systems,Homeowners,South,-1.5775,segment_region,0.0,114.65,126.11,10.0,-13.96,37.74,83232.74,31410.86,-4457.02,2776.59,Hold price: no clear improvement
+Service Contracts,Distributors,North,-0.9169,segment_region,0.0,120.91,133.0,10.0,-8.37,57.83,64202.47,37126.78,510.3,2775.97,Increase price: low elasticity / pricing power
+Commercial Systems,Distributors,West,-1.5828,segment_region,0.0,115.69,127.25,10.0,-14.0,38.3,85491.52,32741.7,-4619.18,2767.08,Hold price: no clear improvement
+Industrial Treatment,Small Business,West,-1.4961,segment_region,0.0,199.75,219.72,10.0,-13.29,42.61,91685.25,39064.72,-4234.09,2758.53,Hold price: no clear improvement
+Commercial Systems,Municipal,South,-0.9381,segment_region,0.0,119.43,131.37,10.0,-8.55,40.23,45381.69,18257.29,268.55,2588.38,Increase price: low elasticity / pricing power
+Commercial Systems,Industrial Accounts,North,-0.219,segment_region,0.0,117.3,129.03,10.0,-2.07,39.15,28621.23,11204.51,2211.78,2571.48,Increase price: low elasticity / pricing power
+Commercial Systems,Municipal,Midwest,-0.5641,segment_region,0.0,118.26,130.09,10.0,-5.23,39.64,34177.64,13548.82,1449.78,2529.54,Increase price: low elasticity / pricing power
+Service Contracts,Small Business,North,-0.7132,segment_region,0.0,122.41,134.65,10.0,-6.57,58.34,45046.79,26282.47,1248.16,2481.27,Increase price: low elasticity / pricing power
+Commercial Systems,Small Business,Northeast,-1.0742,segment_region,0.0,116.61,128.27,10.0,-9.73,38.79,47227.26,18318.36,-332.65,2480.43,Hold price: no clear improvement
+Commercial Systems,Industrial Accounts,Northeast,-0.2413,segment_region,0.0027,117.78,129.55,10.0,-2.27,39.39,27088.59,10671.19,2031.33,2404.55,Increase price: low elasticity / pricing power
+Commercial Systems,Industrial Accounts,Midwest,-0.2816,segment_region,0.0004,119.06,130.96,10.0,-2.65,40.05,27502.28,11013.5,1948.97,2385.62,Increase price: low elasticity / pricing power
+Commercial Systems,Municipal,North,-0.7185,segment_region,0.0,118.8,130.68,10.0,-6.62,39.92,34808.24,13893.9,946.37,2330.66,Increase price: low elasticity / pricing power
+Commercial Systems,Small Business,Midwest,-1.2124,segment_region,0.0,116.25,127.88,10.0,-10.91,38.6,49406.92,19070.42,-990.05,2320.34,Hold price: no clear improvement
+Service Contracts,Industrial Accounts,North,-0.219,segment_region,0.0,122.86,135.15,10.0,-2.07,58.5,26538.66,15526.3,2050.84,2278.27,Increase price: low elasticity / pricing power
+Service Contracts,Distributors,Midwest,-1.0429,segment_region,0.0,121.24,133.37,10.0,-9.46,57.94,63410.41,36742.64,-258.88,2264.33,Hold price: no clear improvement
+Service Contracts,Distributors,Northeast,-1.0054,segment_region,0.0,121.9,134.09,10.0,-9.14,58.17,59000.79,34321.63,-30.22,2224.73,Hold price: no clear improvement
+Commercial Systems,Small Business,West,-1.4961,segment_region,0.0,116.88,128.57,10.0,-13.29,38.93,62415.87,24298.95,-2882.41,2182.86,Hold price: no clear improvement
+Service Contracts,Industrial Accounts,Northeast,-0.2413,segment_region,0.0027,123.47,135.81,10.0,-2.27,58.58,25804.94,15115.36,1935.07,2178.08,Increase price: low elasticity / pricing power
+Industrial Treatment,Municipal,West,-1.2971,segment_region,0.0,203.15,223.46,10.0,-11.63,43.57,57288.46,24959.51,-1599.36,2160.01,Hold price: no clear improvement
+Service Contracts,Industrial Accounts,Midwest,-0.2816,segment_region,0.0004,123.77,136.14,10.0,-2.65,58.82,26115.19,15360.22,1850.68,2135.48,Increase price: low elasticity / pricing power
+Commercial Systems,Municipal,Northeast,-0.7777,segment_region,0.0,117.75,129.53,10.0,-7.14,39.38,31322.28,12335.2,670.57,2027.05,Increase price: low elasticity / pricing power
+Commercial Systems,Industrial Accounts,South,-0.7628,segment_region,0.0,117.34,129.07,10.0,-7.01,39.17,30859.64,12086.7,705.62,2021.94,Increase price: low elasticity / pricing power
+Commercial Systems,Industrial Accounts,West,-0.727,segment_region,0.0,118.04,129.85,10.0,-6.69,39.53,29864.51,11805.37,787.35,1996.19,Increase price: low elasticity / pricing power
+Service Contracts,Municipal,Midwest,-0.5641,segment_region,0.0,122.94,135.23,10.0,-5.23,58.52,28890.45,16907.8,1225.5,1852.7,Increase price: low elasticity / pricing power
+Commercial Systems,Homeowners,West,-1.9064,segment_region,0.0,112.81,124.09,10.0,-16.61,36.72,81446.98,29910.62,-6740.48,1821.82,Hold price: no clear improvement
+Service Contracts,Homeowners,North,-1.1713,segment_region,0.0,119.78,131.76,10.0,-10.56,57.43,58930.69,33843.61,-954.53,1695.42,Hold price: no clear improvement
+Commercial Systems,Municipal,West,-1.2971,segment_region,0.0,119.41,131.35,10.0,-11.63,40.22,39882.91,16041.99,-1113.44,1658.9,Hold price: no clear improvement
+Service Contracts,Distributors,South,-1.2717,segment_region,0.0,120.83,132.91,10.0,-11.41,57.8,71290.68,41206.58,-1822.56,1611.43,Hold price: no clear improvement
+Service Contracts,Municipal,North,-0.7185,segment_region,0.0,123.02,135.32,10.0,-6.62,58.55,29402.44,17215.83,799.39,1606.01,Increase price: low elasticity / pricing power
+Industrial Treatment,Homeowners,West,-1.9064,segment_region,0.0,196.07,215.68,10.0,-16.61,41.53,109211.58,45356.17,-9038.26,1570.74,Hold price: no clear improvement
+Service Contracts,Industrial Accounts,West,-0.727,segment_region,0.0,123.29,135.62,10.0,-6.69,58.64,27124.61,15906.81,715.12,1466.01,Increase price: low elasticity / pricing power
+Residential Filters,Distributors,North,-0.9169,segment_region,0.0,31.29,34.41,10.0,-8.37,33.29,22212.68,7393.8,176.55,1416.59,Increase price: low elasticity / pricing power
+Service Contracts,Industrial Accounts,South,-0.7628,segment_region,0.0,123.72,136.09,10.0,-7.01,58.78,27341.41,16072.62,625.17,1415.32,Increase price: low elasticity / pricing power
+Service Contracts,Municipal,Northeast,-0.7777,segment_region,0.0,124.73,137.2,10.0,-7.14,59.12,27939.76,16518.0,598.15,1414.15,Increase price: low elasticity / pricing power
+Service Contracts,Municipal,South,-0.9381,segment_region,0.0,124.37,136.81,10.0,-8.55,59.0,31589.89,18638.43,186.93,1294.61,Increase price: low elasticity / pricing power
+Service Contracts,Small Business,Northeast,-1.0742,segment_region,0.0,122.68,134.94,10.0,-9.73,58.44,38275.38,22366.5,-269.59,1278.47,Hold price: no clear improvement
+Service Contracts,Small Business,South,-1.2159,segment_region,0.0,123.13,135.44,10.0,-10.94,58.59,50976.78,29866.92,-1038.01,1271.75,Hold price: no clear improvement
+Residential Filters,Distributors,Northeast,-1.0054,segment_region,0.0,31.03,34.13,10.0,-9.14,32.74,20387.96,6675.27,-10.44,1242.5,Hold price: no clear improvement
+Residential Filters,Distributors,South,-1.2717,segment_region,0.0,31.09,34.2,10.0,-11.41,32.86,24124.15,7927.74,-616.74,1232.02,Hold price: no clear improvement
+Residential Filters,Distributors,Midwest,-1.0429,segment_region,0.0,31.17,34.29,10.0,-9.46,33.04,20479.69,6767.01,-83.61,1213.84,Hold price: no clear improvement
+Service Contracts,Homeowners,Northeast,-1.2671,segment_region,0.0,120.29,132.32,10.0,-11.38,57.61,50883.14,29314.37,-1279.12,1174.51,Hold price: no clear improvement
+Residential Filters,Homeowners,North,-1.1713,segment_region,0.0,30.52,33.57,10.0,-10.56,31.61,20021.33,6329.52,-324.3,1121.97,Hold price: no clear improvement
+Service Contracts,Homeowners,Midwest,-1.3334,segment_region,0.0,119.63,131.59,10.0,-11.93,57.38,56943.57,32672.33,-1780.78,1115.63,Hold price: no clear improvement
+Residential Filters,Homeowners,South,-1.5775,segment_region,0.0,30.8,33.88,10.0,-13.96,32.23,26148.69,8428.64,-1400.23,1073.24,Hold price: no clear improvement
+Residential Filters,Small Business,North,-0.7132,segment_region,0.0,31.08,34.19,10.0,-6.57,32.84,14669.32,4817.9,406.46,1053.85,Increase price: low elasticity / pricing power
+Residential Filters,Homeowners,Midwest,-1.3334,segment_region,0.0,31.07,34.18,10.0,-11.93,32.83,20817.64,6833.63,-651.03,1017.76,Hold price: no clear improvement
+Service Contracts,Small Business,Midwest,-1.2124,segment_region,0.0,123.72,136.09,10.0,-10.91,58.79,39838.09,23419.31,-798.3,993.35,Hold price: no clear improvement
+Residential Filters,Distributors,West,-1.5828,segment_region,0.0,31.17,34.28,10.0,-14.0,33.03,24310.98,8031.08,-1313.54,966.04,Hold price: no clear improvement
+Residential Filters,Homeowners,Northeast,-1.2671,segment_region,0.0,30.83,33.91,10.0,-11.38,32.3,18620.51,6014.02,-468.09,966.0,Hold price: no clear improvement
+Residential Filters,Small Business,South,-1.2159,segment_region,0.0,31.34,34.47,10.0,-10.94,33.4,17894.77,5977.05,-364.38,939.61,Hold price: no clear improvement
+Residential Filters,Small Business,Northeast,-1.0742,segment_region,0.0,31.55,34.71,10.0,-9.73,33.85,13189.64,4465.28,-92.9,756.05,Hold price: no clear improvement
+Residential Filters,Municipal,North,-0.7185,segment_region,0.0,31.63,34.79,10.0,-6.62,34.01,10563.57,3592.43,287.2,748.61,Increase price: low elasticity / pricing power
+Residential Filters,Small Business,Midwest,-1.2124,segment_region,0.0,31.16,34.28,10.0,-10.91,33.02,14054.41,4641.29,-281.63,745.55,Hold price: no clear improvement
+Residential Filters,Industrial Accounts,North,-0.219,segment_region,0.0,31.66,34.83,10.0,-2.07,34.08,7915.52,2697.6,611.69,719.45,Increase price: low elasticity / pricing power
+Service Contracts,Municipal,West,-1.2971,segment_region,0.0,123.9,136.29,10.0,-11.63,58.84,35930.15,21143.05,-1003.08,716.43,Hold price: no clear improvement
+Residential Filters,Municipal,South,-0.9381,segment_region,0.0,31.7,34.87,10.0,-8.55,34.15,11474.38,3918.83,67.9,714.09,Increase price: low elasticity / pricing power
+Residential Filters,Small Business,West,-1.4961,segment_region,0.0,31.59,34.74,10.0,-13.29,33.92,16803.71,5699.99,-776.01,699.54,Hold price: no clear improvement
+Residential Filters,Municipal,Midwest,-0.5641,segment_region,0.0,31.87,35.06,10.0,-5.23,34.51,9019.55,3112.87,382.6,691.77,Increase price: low elasticity / pricing power
+Residential Filters,Homeowners,West,-1.9064,segment_region,0.0,30.94,34.03,10.0,-16.61,32.53,23201.53,7547.78,-1920.14,680.59,Hold price: no clear improvement
+Residential Filters,Industrial Accounts,Midwest,-0.2816,segment_region,0.0004,31.68,34.85,10.0,-2.65,34.12,7254.66,2475.04,514.11,640.68,Increase price: low elasticity / pricing power
+Residential Filters,Industrial Accounts,Northeast,-0.2413,segment_region,0.0027,31.54,34.7,10.0,-2.27,33.83,7097.09,2400.97,532.2,638.96,Increase price: low elasticity / pricing power
+Residential Filters,Industrial Accounts,South,-0.7628,segment_region,0.0,31.68,34.85,10.0,-7.01,34.12,8933.98,3048.17,204.28,616.98,Increase price: low elasticity / pricing power
+Residential Filters,Industrial Accounts,West,-0.727,segment_region,0.0,31.76,34.93,10.0,-6.69,34.27,8510.53,2916.92,224.37,598.8,Increase price: low elasticity / pricing power
+Residential Filters,Municipal,Northeast,-0.7777,segment_region,0.0,31.65,34.81,10.0,-7.14,34.05,8671.0,2952.16,185.63,594.2,Increase price: low elasticity / pricing power
+Residential Filters,Municipal,West,-1.2971,segment_region,0.0,31.75,34.92,10.0,-11.63,34.26,11302.37,3872.06,-315.54,548.5,Hold price: no clear improvement
+Replacement Parts,Distributors,North,-0.9169,segment_region,0.0,10.85,11.93,10.0,-8.37,52.26,10426.58,5448.6,82.87,499.43,Increase price: low elasticity / pricing power
+Service Contracts,Homeowners,West,-1.9064,segment_region,0.0,121.37,109.23,-10.0,22.24,57.99,71122.39,41242.25,7126.62,480.07,Target promotion: elastic segment
+Service Contracts,Small Business,West,-1.4961,segment_region,0.0,123.65,136.01,10.0,-13.29,58.76,51684.83,30371.01,-2386.84,445.5,Hold price: no clear improvement
+Replacement Parts,Small Business,North,-0.7132,segment_region,0.0,10.86,11.94,10.0,-6.57,52.29,7252.1,3791.86,200.94,428.33,Increase price: low elasticity / pricing power
+Replacement Parts,Distributors,Northeast,-1.0054,segment_region,0.0,10.77,11.85,10.0,-9.14,51.9,9562.44,4962.6,-4.9,415.39,Hold price: no clear improvement
+Replacement Parts,Distributors,Midwest,-1.0429,segment_region,0.0,10.69,11.76,10.0,-9.46,51.56,9634.03,4966.85,-39.33,402.26,Hold price: no clear improvement
+Service Contracts,Homeowners,South,-1.5775,segment_region,0.0,120.66,132.73,10.0,-13.96,57.74,71433.21,41247.13,-3825.17,388.39,Hold price: no clear improvement
+Replacement Parts,Distributors,South,-1.2717,segment_region,0.0,10.69,11.75,10.0,-11.41,51.52,12822.17,6606.17,-327.8,381.73,Hold price: no clear improvement
+Replacement Parts,Industrial Accounts,North,-0.219,segment_region,0.0,11.01,12.11,10.0,-2.07,52.95,3952.59,2092.97,305.45,343.85,Increase price: low elasticity / pricing power
+Replacement Parts,Municipal,Midwest,-0.5641,segment_region,0.0,10.89,11.98,10.0,-5.23,52.42,5029.6,2636.44,213.35,338.61,Increase price: low elasticity / pricing power
+Replacement Parts,Homeowners,North,-1.1713,segment_region,0.0,10.6,11.66,10.0,-10.56,51.13,9135.92,4670.76,-147.98,323.68,Hold price: no clear improvement
+Replacement Parts,Industrial Accounts,Midwest,-0.2816,segment_region,0.0004,11.01,12.11,10.0,-2.65,52.95,3820.33,2022.87,270.73,318.33,Increase price: low elasticity / pricing power
+Replacement Parts,Industrial Accounts,Northeast,-0.2413,segment_region,0.0027,11.05,12.15,10.0,-2.27,53.11,3679.05,1954.11,275.89,315.1,Increase price: low elasticity / pricing power
+Service Contracts,Distributors,West,-1.5828,segment_region,0.0,122.06,134.26,10.0,-14.0,58.22,70304.45,40934.21,-3798.61,313.94,Hold price: no clear improvement
+Replacement Parts,Municipal,North,-0.7185,segment_region,0.0,10.92,12.02,10.0,-6.62,52.59,5156.51,2711.55,140.2,302.02,Increase price: low elasticity / pricing power
+Replacement Parts,Municipal,South,-0.9381,segment_region,0.0,11.0,12.1,10.0,-8.55,52.89,6091.56,3221.84,36.05,281.48,Increase price: low elasticity / pricing power
+Replacement Parts,Small Business,South,-1.2159,segment_region,0.0,10.87,11.95,10.0,-10.94,52.34,8835.65,4624.31,-179.92,280.87,Hold price: no clear improvement
+Replacement Parts,Homeowners,Northeast,-1.2671,segment_region,0.0,10.58,11.64,10.0,-11.38,51.03,9065.95,4626.69,-227.9,277.1,Hold price: no clear improvement
+Replacement Parts,Industrial Accounts,South,-0.7628,segment_region,0.0,11.03,12.14,10.0,-7.01,53.05,4733.24,2511.02,108.23,264.05,Increase price: low elasticity / pricing power
+Replacement Parts,Small Business,Northeast,-1.0742,segment_region,0.0,10.87,11.96,10.0,-9.73,52.35,6664.08,3488.74,-46.94,262.05,Hold price: no clear improvement
+Replacement Parts,Industrial Accounts,West,-0.727,segment_region,0.0,11.0,12.1,10.0,-6.69,52.9,4432.53,2344.99,116.86,256.59,Increase price: low elasticity / pricing power
+Replacement Parts,Municipal,Northeast,-0.7777,segment_region,0.0,10.92,12.01,10.0,-7.14,52.57,4598.02,2417.24,98.44,254.24,Increase price: low elasticity / pricing power
+Replacement Parts,Small Business,Midwest,-1.2124,segment_region,0.0,10.79,11.87,10.0,-10.91,51.99,7391.28,3842.98,-148.11,239.09,Hold price: no clear improvement
+Replacement Parts,Homeowners,Midwest,-1.3334,segment_region,0.0,10.67,11.74,10.0,-11.93,51.46,8740.4,4497.98,-273.34,232.93,Hold price: no clear improvement
+Replacement Parts,Distributors,West,-1.5828,segment_region,0.0,10.75,11.82,10.0,-14.0,51.81,12275.92,6360.36,-663.28,165.04,Hold price: no clear improvement
+Replacement Parts,Municipal,West,-1.2971,segment_region,0.0,11.03,12.13,10.0,-11.63,53.03,5779.14,3064.82,-161.34,154.29,Hold price: no clear improvement
+Replacement Parts,Homeowners,South,-1.5775,segment_region,0.0,10.77,11.85,10.0,-13.96,51.9,11069.8,5744.76,-592.78,150.53,Hold price: no clear improvement
+Replacement Parts,Small Business,West,-1.4961,segment_region,0.0,10.88,11.97,10.0,-13.29,52.4,7965.28,4173.52,-367.84,136.04,Hold price: no clear improvement
+Replacement Parts,Homeowners,West,-1.9064,segment_region,0.0,10.58,10.89,2.98,-5.45,51.04,11510.18,5874.34,-302.72,4.51,Hold price: no clear improvement

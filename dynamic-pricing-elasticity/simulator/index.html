@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AquaPure Systems — Dynamic Pricing Simulator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0a1220;
+    --bg-alt:#0e1a2b;
+    --card:#121e30;
+    --card-alt:#0f2233;
+    --border:#213554;
+    --text:#e7edf5;
+    --muted:#8ea0bd;
+    --accent:#22d3ee;
+    --accent-2:#38bdf8;
+    --good:#34d399;
+    --bad:#f87171;
+    --warn:#fbbf24;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(1200px 800px at 10% -10%, #0f2740 0%, var(--bg) 55%), var(--bg);
+    color:var(--text);
+    font-family:'Segoe UI', Inter, system-ui, -apple-system, Roboto, Arial, sans-serif;
+    line-height:1.5;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px;}
+
+  header.hero{
+    display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start;justify-content:space-between;
+    padding:30px 32px;border-radius:var(--radius);
+    background:linear-gradient(135deg, #0d3448 0%, #0a1e33 60%, #0a1220 100%);
+    border:1px solid var(--border);
+    margin-bottom:22px;
+  }
+  .hero h1{margin:0 0 6px;font-size:26px;letter-spacing:.2px;}
+  .hero .sub{color:var(--muted);max-width:640px;font-size:14.5px;}
+  .badge{
+    display:inline-block;font-size:11.5px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;
+    color:#04222a;background:var(--accent);padding:4px 10px;border-radius:999px;margin-bottom:10px;
+  }
+  .disclaimer{
+    font-size:12px;color:var(--muted);border:1px dashed var(--border);border-radius:10px;padding:10px 14px;max-width:320px;
+  }
+
+  .kpi-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:22px;
+  }
+  .kpi{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;
+  }
+  .kpi .label{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+  .kpi .value{font-size:22px;font-weight:700;}
+  .kpi .value.good{color:var(--good);}
+  .kpi .value.bad{color:var(--bad);}
+  .kpi .note{font-size:11.5px;color:var(--muted);margin-top:4px;}
+
+  section{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:22px 24px;margin-bottom:20px;
+  }
+  section h2{margin:0 0 4px;font-size:18px;}
+  section p.hint{margin:0 0 18px;color:var(--muted);font-size:13.5px;}
+
+  .sim-grid{display:grid;grid-template-columns:320px 1fr;gap:22px;}
+  @media (max-width:820px){.sim-grid{grid-template-columns:1fr;}}
+
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px;}
+  select{
+    width:100%;padding:9px 10px;border-radius:9px;background:var(--bg-alt);color:var(--text);
+    border:1px solid var(--border);font-size:14px;
+  }
+  .slider-box{margin-top:6px;}
+  input[type=range]{width:100%;accent-color:var(--accent);}
+  .slider-readout{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:2px;}
+  .pct-display{font-size:32px;font-weight:800;color:var(--accent);margin:8px 0 2px;}
+  .btn{
+    display:inline-block;cursor:pointer;background:var(--accent);color:#04222a;font-weight:700;
+    border:none;border-radius:9px;padding:9px 14px;font-size:13px;margin-top:6px;
+  }
+  .btn.secondary{background:transparent;border:1px solid var(--border);color:var(--text);font-weight:600;}
+  .btn:hover{filter:brightness(1.08);}
+
+  .rec-badge{
+    display:inline-block;font-size:12px;padding:5px 10px;border-radius:8px;margin-top:8px;font-weight:600;
+  }
+  .rec-badge.inc{background:rgba(52,211,153,.12);color:var(--good);border:1px solid rgba(52,211,153,.35);}
+  .rec-badge.hold{background:rgba(148,163,184,.12);color:#cbd5e1;border:1px solid rgba(148,163,184,.3);}
+  .rec-badge.promo{background:rgba(56,189,248,.12);color:var(--accent-2);border:1px solid rgba(56,189,248,.35);}
+
+  .results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px;}
+  .result-cell{background:var(--card-alt);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+  .result-cell .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;}
+  .result-cell .value{font-size:19px;font-weight:700;margin-top:3px;}
+  .result-cell .value.good{color:var(--good);}
+  .result-cell .value.bad{color:var(--bad);}
+
+  canvas{max-width:100%;}
+  .chart-box{height:260px;position:relative;margin-top:6px;}
+
+  .elas-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  @media (max-width:820px){.elas-grid{grid-template-columns:1fr;}}
+  .elas-col h3{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:0 0 10px;}
+  .chart-box.small{height:210px;}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th,td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--border);}
+  th{color:var(--muted);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.3px;}
+  tbody tr{cursor:pointer;}
+  tbody tr:hover{background:rgba(34,211,238,.06);}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;}
+  td.good{color:var(--good);}
+  td.bad{color:var(--bad);}
+
+  .warn-banner{
+    background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.4);color:var(--warn);
+    padding:9px 12px;border-radius:9px;font-size:12.5px;margin-top:10px;display:none;
+  }
+
+  footer{color:var(--muted);font-size:12px;text-align:center;padding:20px 10px 0;}
+  footer .eq{
+    font-family:Consolas, Menlo, monospace;background:var(--card-alt);border:1px solid var(--border);
+    border-radius:10px;padding:12px 16px;display:inline-block;margin:10px 0;font-size:12px;color:#cdd8e8;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div>
+      <span class="badge">Portfolio Project · Synthetic Data</span>
+      <h1>AquaPure Systems — Dynamic Pricing &amp; Elasticity Simulator</h1>
+      <div class="sub">
+        Play with the same log‑log elasticity model, customer‑segmentation, and constrained
+        gross‑profit optimizer described in the project writeup. Pick a category, segment and
+        region, move the price slider, and watch demand, revenue and margin respond in real time
+        using each cell's own estimated own‑price elasticity.
+      </div>
+    </div>
+    <div class="disclaimer">
+      Synthetic, anonymized data. Inspired by a real pricing‑analytics use case; discloses no
+      confidential company data, systems, or results.
+    </div>
+  </header>
+
+  <div class="kpi-grid" id="kpiGrid"></div>
+
+  <section>
+    <h2>Try it: adjust price, watch the model respond</h2>
+    <p class="hint">Filter to any category / segment / region — or leave on "All" to move the whole portfolio at once. The ±10% range mirrors the optimizer's real guardrail; the 30% gross‑margin floor is enforced the same way too.</p>
+    <div class="sim-grid">
+      <div>
+        <div class="field">
+          <label>Product category</label>
+          <select id="selCat"></select>
+        </div>
+        <div class="field">
+          <label>Customer segment</label>
+          <select id="selSeg"></select>
+        </div>
+        <div class="field">
+          <label>Region</label>
+          <select id="selReg"></select>
+        </div>
+
+        <div class="field slider-box">
+          <label>Price change</label>
+          <div class="pct-display" id="pctDisplay">0.0%</div>
+          <input type="range" id="slider" min="-10" max="10" step="0.5" value="0" />
+          <div class="slider-readout"><span>-10%</span><span>Model's ±10% guardrail</span><span>+10%</span></div>
+        </div>
+
+        <button class="btn" id="btnApplyRec">Apply model's recommendation</button>
+        <button class="btn secondary" id="btnReset">Reset to 0%</button>
+        <div id="recBadge"></div>
+        <div class="warn-banner" id="warnBanner">⚠ This move would push margin below the 30% floor for at least one cell in the current selection.</div>
+      </div>
+
+      <div>
+        <div class="results-grid" id="resultsGrid"></div>
+        <div class="chart-box"><canvas id="impactChart"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Where's the pricing power?</h2>
+    <p class="hint">Fixed‑effects elasticity estimates by segment, region and category (robust SEs, full model). Bars closer to zero = more pricing power; further from zero = more price‑sensitive.</p>
+    <div class="elas-grid">
+      <div class="elas-col"><h3>By customer segment</h3><div class="chart-box small"><canvas id="chartSeg"></canvas></div></div>
+      <div class="elas-col"><h3>By region</h3><div class="chart-box small"><canvas id="chartReg"></canvas></div></div>
+      <div class="elas-col"><h3>By product category</h3><div class="chart-box small"><canvas id="chartCat"></canvas></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Top pricing opportunities</h2>
+    <p class="hint">Ranked by projected gross‑profit impact from the constrained optimizer, across all 125 category × segment × region cells. Click a row to load it into the simulator above.</p>
+    <table>
+      <thead><tr>
+        <th>Category</th><th>Segment</th><th>Region</th><th>Action</th>
+        <th class="num">Price → Rec.</th><th class="num">Δ Demand</th><th class="num">GP Impact</th>
+      </tr></thead>
+      <tbody id="oppTable"></tbody>
+    </table>
+  </section>
+
+  <footer>
+    <div class="eq">log(units) = b0 + b1·log(net_price) + controls + region/category/product/segment/month FE</div>
+    <div>b1 = own‑price elasticity, re‑estimated within each segment × region × category cell.<br/>
+    Demand response used above: new_demand = current_demand · (new_price / current_price) ^ elasticity, capped at ±10% price move with a 30% gross‑margin floor.</div>
+    <div style="margin-top:10px;">Built as a portfolio project. All figures are computed live in your browser from the model's own output files — nothing here is hard‑coded.</div>
+  </footer>
+
+</div>
+
+<script>
+const DATA = [{"cat":"Industrial Treatment","seg":"Distributors","reg":"North","elas":-0.9169,"p":0.0,"price":199.1,"recPrice":219.01,"recChg":10.0,"demChg":-8.37,"margin":42.42,"baseRev":116475.5,"baseGP":49410.13,"recRevImp":925.78,"recGPImp":6537.77,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Industrial Treatment","seg":"Distributors","reg":"South","elas":-1.2717,"p":0.0,"price":199.2,"recPrice":219.12,"recChg":10.0,"demChg":-11.41,"margin":42.45,"baseRev":138245.31,"baseGP":58684.0,"recRevImp":-3534.26,"recGPImp":5547.36,"recType":"Hold price: no clear improvement"},{"cat":"Industrial Treatment","seg":"Small Business","reg":"North","elas":-0.7132,"p":0.0,"price":198.48,"recPrice":218.32,"recChg":10.0,"demChg":-6.57,"margin":42.24,"baseRev":81971.26,"baseGP":34624.26,"recRevImp":2271.26,"recGPImp":5382.71,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Industrial Treatment","seg":"Distributors","reg":"Northeast","elas":-1.0054,"p":0.0,"price":197.55,"recPrice":217.31,"recChg":10.0,"demChg":-9.14,"margin":41.97,"baseRev":101542.13,"baseGP":42616.31,"recRevImp":-52.01,"recGPImp":5332.08,"recType":"Hold price: no clear improvement"},{"cat":"Industrial Treatment","seg":"Homeowners","reg":"North","elas":-1.1713,"p":0.0,"price":196.56,"recPrice":216.21,"recChg":10.0,"demChg":-10.56,"margin":41.67,"baseRev":114592.21,"baseGP":47756.12,"recRevImp":-1856.12,"recGPImp":5203.8,"recType":"Hold price: no clear improvement"},{"cat":"Industrial Treatment","seg":"Distributors","reg":"Midwest","elas":-1.0429,"p":0.0,"price":198.56,"recPrice":218.42,"recChg":10.0,"demChg":-9.46,"margin":42.26,"baseRev":101465.27,"baseGP":42883.38,"recRevImp":-414.24,"recGPImp":5128.58,"recType":"Hold price: no clear improvement"},{"cat":"Commercial Systems","seg":"Distributors","reg":"North","elas":-0.9169,"p":0.0,"price":116.34,"recPrice":127.98,"recChg":10.0,"demChg":-8.37,"margin":38.65,"baseRev":74577.09,"baseGP":28822.51,"recRevImp":592.76,"recGPImp":4421.47,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Industrial Treatment","seg":"Homeowners","reg":"Northeast","elas":-1.2671,"p":0.0,"price":196.19,"recPrice":215.81,"recChg":10.0,"demChg":-11.38,"margin":41.57,"baseRev":99075.23,"baseGP":41181.18,"recRevImp":-2490.59,"recGPImp":4095.34,"recType":"Hold price: no clear improvement"},{"cat":"Commercial Systems","seg":"Distributors","reg":"South","elas":-1.2717,"p":0.0,"price":114.94,"recPrice":126.44,"recChg":10.0,"demChg":-11.41,"margin":37.9,"baseRev":89884.38,"baseGP":34065.22,"recRevImp":-2297.91,"recGPImp":4073.64,"recType":"Hold price: no clear improvement"},{"cat":"Industrial Treatment","seg":"Homeowners","reg":"Midwest","elas":-1.3334,"p":0.0,"price":195.12,"recPrice":214.63,"recChg":10.0,"demChg":-11.93,"margin":41.25,"baseRev":101854.26,"baseGP":42011.31,"recRevImp":-3185.26,"recGPImp":3956.09,"recType":"Hold price: no clear improvement"},{"cat":"Commercial Systems","seg":"Distributors","reg":"Midwest","elas":-1.0429,"p":0.0,"price":116.26,"recPrice":127.88,"recChg":10.0,"demChg":-9.46,"margin":38.6,"baseRev":73124.72,"baseGP":28226.7,"recRevImp":-298.54,"recGPImp":3949.56,"recType":"Hold price: no clear improvement"},{"cat":"Industrial Treatment","seg":"Industrial Accounts","reg":"North","elas":-0.219,"p":0.0,"price":200.57,"recPrice":220.63,"recChg":10.0,"demChg":-2.07,"margin":42.84,"baseRev":44326.27,"baseGP":18990.46,"recRevImp":3425.42,"recGPImp":3948.67,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Industrial Treatment","seg":"Industrial Accounts","reg":"Northeast","elas":-0.2413,"p":0.0027,"price":204.24,"recPrice":224.67,"recChg":10.0,"demChg":-2.27,"margin":43.87,"baseRev":44525.27,"baseGP":19533.39,"recRevImp":3338.88,"recGPImp":3907.03,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Industrial Treatment","seg":"Small Business","reg":"South","elas":-1.2159,"p":0.0,"price":201.73,"recPrice":221.91,"recChg":10.0,"demChg":-10.94,"margin":43.17,"baseRev":93200.67,"baseGP":40236.22,"recRevImp":-1897.8,"recGPImp":3897.39,"recType":"Hold price: no clear improvement"},{"cat":"Commercial Systems","seg":"Distributors","reg":"Northeast","elas":-1.0054,"p":0.0,"price":114.9,"recPrice":126.39,"recChg":10.0,"demChg":-9.14,"margin":37.88,"baseRev":68249.36,"baseGP":25849.64,"recRevImp":-34.96,"recGPImp":3839.13,"recType":"Hold price: no clear improvement"},{"cat":"Industrial Treatment","seg":"Industrial Accounts","reg":"Midwest","elas":-0.2816,"p":0.0004,"price":202.29,"recPrice":222.51,"recChg":10.0,"demChg":-2.65,"margin":43.33,"baseRev":43895.91,"baseGP":19018.66,"recRevImp":3110.72,"recGPImp":3769.5,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Industrial Treatment","seg":"Small Business","reg":"Northeast","elas":-1.0742,"p":0.0,"price":198.28,"recPrice":218.11,"recChg":10.0,"demChg":-9.73,"margin":42.18,"baseRev":75742.34,"baseGP":31949.22,"recRevImp":-533.49,"recGPImp":3727.94,"recType":"Hold price: no clear improvement"},{"cat":"Industrial Treatment","seg":"Municipal","reg":"Midwest","elas":-0.5641,"p":0.0,"price":200.36,"recPrice":220.39,"recChg":10.0,"demChg":-5.23,"margin":42.78,"baseRev":51492.02,"baseGP":22029.11,"recRevImp":2184.23,"recGPImp":3726.39,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Industrial Treatment","seg":"Distributors","reg":"West","elas":-1.5828,"p":0.0,"price":199.1,"recPrice":219.01,"recChg":10.0,"demChg":-14.0,"margin":42.42,"baseRev":134590.94,"baseGP":57093.18,"recRevImp":-7272.06,"recGPImp":3579.51,"recType":"Hold price: no clear improvement"},{"cat":"Commercial Systems","seg":"Small Business","reg":"North","elas":-0.7132,"p":0.0,"price":117.34,"recPrice":129.08,"recChg":10.0,"demChg":-6.57,"margin":39.17,"baseRev":52334.96,"baseGP":20499.48,"recRevImp":1450.1,"recGPImp":3542.19,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Industrial Treatment","seg":"Municipal","reg":"North","elas":-0.7185,"p":0.0,"price":199.97,"recPrice":219.97,"recChg":10.0,"demChg":-6.62,"margin":42.67,"baseRev":53791.88,"baseGP":22953.27,"recRevImp":1462.5,"recGPImp":3503.66,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Commercial Systems","seg":"Homeowners","reg":"North","elas":-1.1713,"p":0.0,"price":115.06,"recPrice":126.57,"recChg":10.0,"demChg":-10.56,"margin":37.96,"baseRev":69496.41,"baseGP":26382.89,"recRevImp":-1125.67,"recGPImp":3428.42,"recType":"Hold price: no clear improvement"},{"cat":"Industrial Treatment","seg":"Small Business","reg":"Midwest","elas":-1.2124,"p":0.0,"price":200.23,"recPrice":220.25,"recChg":10.0,"demChg":-10.91,"margin":42.74,"baseRev":80290.67,"baseGP":34319.36,"recRevImp":-1608.91,"recGPImp":3407.57,"recType":"Hold price: no clear improvement"},{"cat":"Industrial Treatment","seg":"Homeowners","reg":"South","elas":-1.5775,"p":0.0,"price":195.79,"recPrice":215.37,"recChg":10.0,"demChg":-13.96,"margin":41.45,"baseRev":119234.93,"baseGP":49418.15,"recRevImp":-6384.9,"recGPImp":3360.56,"recType":"Hold price: no clear improvement"},{"cat":"Industrial Treatment","seg":"Industrial Accounts","reg":"West","elas":-0.727,"p":0.0,"price":201.8,"recPrice":221.98,"recChg":10.0,"demChg":-6.69,"margin":43.19,"baseRev":51459.39,"baseGP":22225.76,"recRevImp":1356.69,"recGPImp":3313.51,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Industrial Treatment","seg":"Municipal","reg":"South","elas":-0.9381,"p":0.0,"price":200.98,"recPrice":221.08,"recChg":10.0,"demChg":-8.55,"margin":42.96,"baseRev":59290.32,"baseGP":25471.02,"recRevImp":350.85,"recGPImp":3243.26,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Industrial Treatment","seg":"Industrial Accounts","reg":"South","elas":-0.7628,"p":0.0,"price":202.66,"recPrice":222.93,"recChg":10.0,"demChg":-7.01,"margin":43.43,"baseRev":50260.06,"baseGP":21828.93,"recRevImp":1149.22,"recGPImp":3142.76,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Commercial Systems","seg":"Homeowners","reg":"Northeast","elas":-1.2671,"p":0.0,"price":114.22,"recPrice":125.64,"recChg":10.0,"demChg":-11.38,"margin":37.5,"baseRev":67843.79,"baseGP":25444.07,"recRevImp":-1705.48,"recGPImp":3117.84,"recType":"Hold price: no clear improvement"},{"cat":"Commercial Systems","seg":"Homeowners","reg":"Midwest","elas":-1.3334,"p":0.0,"price":114.7,"recPrice":126.17,"recChg":10.0,"demChg":-11.93,"margin":37.77,"baseRev":68592.4,"baseGP":25907.16,"recRevImp":-2145.07,"recGPImp":2948.77,"recType":"Hold price: no clear improvement"},{"cat":"Industrial Treatment","seg":"Municipal","reg":"Northeast","elas":-0.7777,"p":0.0,"price":202.58,"recPrice":222.83,"recChg":10.0,"demChg":-7.14,"margin":43.41,"baseRev":47605.3,"baseGP":20664.51,"recRevImp":1019.16,"recGPImp":2943.88,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Commercial Systems","seg":"Small Business","reg":"South","elas":-1.2159,"p":0.0,"price":117.17,"recPrice":128.89,"recChg":10.0,"demChg":-10.94,"margin":39.08,"baseRev":63272.15,"baseGP":24726.95,"recRevImp":-1288.38,"recGPImp":2929.1,"recType":"Hold price: no clear improvement"},{"cat":"Commercial Systems","seg":"Homeowners","reg":"South","elas":-1.5775,"p":0.0,"price":114.65,"recPrice":126.11,"recChg":10.0,"demChg":-13.96,"margin":37.74,"baseRev":83232.74,"baseGP":31410.86,"recRevImp":-4457.02,"recGPImp":2776.59,"recType":"Hold price: no clear improvement"},{"cat":"Service Contracts","seg":"Distributors","reg":"North","elas":-0.9169,"p":0.0,"price":120.91,"recPrice":133.0,"recChg":10.0,"demChg":-8.37,"margin":57.83,"baseRev":64202.47,"baseGP":37126.78,"recRevImp":510.3,"recGPImp":2775.97,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Commercial Systems","seg":"Distributors","reg":"West","elas":-1.5828,"p":0.0,"price":115.69,"recPrice":127.25,"recChg":10.0,"demChg":-14.0,"margin":38.3,"baseRev":85491.52,"baseGP":32741.7,"recRevImp":-4619.18,"recGPImp":2767.08,"recType":"Hold price: no clear improvement"},{"cat":"Industrial Treatment","seg":"Small Business","reg":"West","elas":-1.4961,"p":0.0,"price":199.75,"recPrice":219.72,"recChg":10.0,"demChg":-13.29,"margin":42.61,"baseRev":91685.25,"baseGP":39064.72,"recRevImp":-4234.09,"recGPImp":2758.53,"recType":"Hold price: no clear improvement"},{"cat":"Commercial Systems","seg":"Municipal","reg":"South","elas":-0.9381,"p":0.0,"price":119.43,"recPrice":131.37,"recChg":10.0,"demChg":-8.55,"margin":40.23,"baseRev":45381.69,"baseGP":18257.29,"recRevImp":268.55,"recGPImp":2588.38,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Commercial Systems","seg":"Industrial Accounts","reg":"North","elas":-0.219,"p":0.0,"price":117.3,"recPrice":129.03,"recChg":10.0,"demChg":-2.07,"margin":39.15,"baseRev":28621.23,"baseGP":11204.51,"recRevImp":2211.78,"recGPImp":2571.48,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Commercial Systems","seg":"Municipal","reg":"Midwest","elas":-0.5641,"p":0.0,"price":118.26,"recPrice":130.09,"recChg":10.0,"demChg":-5.23,"margin":39.64,"baseRev":34177.64,"baseGP":13548.82,"recRevImp":1449.78,"recGPImp":2529.54,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Service Contracts","seg":"Small Business","reg":"North","elas":-0.7132,"p":0.0,"price":122.41,"recPrice":134.65,"recChg":10.0,"demChg":-6.57,"margin":58.34,"baseRev":45046.79,"baseGP":26282.47,"recRevImp":1248.16,"recGPImp":2481.27,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Commercial Systems","seg":"Small Business","reg":"Northeast","elas":-1.0742,"p":0.0,"price":116.61,"recPrice":128.27,"recChg":10.0,"demChg":-9.73,"margin":38.79,"baseRev":47227.26,"baseGP":18318.36,"recRevImp":-332.65,"recGPImp":2480.43,"recType":"Hold price: no clear improvement"},{"cat":"Commercial Systems","seg":"Industrial Accounts","reg":"Northeast","elas":-0.2413,"p":0.0027,"price":117.78,"recPrice":129.55,"recChg":10.0,"demChg":-2.27,"margin":39.39,"baseRev":27088.59,"baseGP":10671.19,"recRevImp":2031.33,"recGPImp":2404.55,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Commercial Systems","seg":"Industrial Accounts","reg":"Midwest","elas":-0.2816,"p":0.0004,"price":119.06,"recPrice":130.96,"recChg":10.0,"demChg":-2.65,"margin":40.05,"baseRev":27502.28,"baseGP":11013.5,"recRevImp":1948.97,"recGPImp":2385.62,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Commercial Systems","seg":"Municipal","reg":"North","elas":-0.7185,"p":0.0,"price":118.8,"recPrice":130.68,"recChg":10.0,"demChg":-6.62,"margin":39.92,"baseRev":34808.24,"baseGP":13893.9,"recRevImp":946.37,"recGPImp":2330.66,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Commercial Systems","seg":"Small Business","reg":"Midwest","elas":-1.2124,"p":0.0,"price":116.25,"recPrice":127.88,"recChg":10.0,"demChg":-10.91,"margin":38.6,"baseRev":49406.92,"baseGP":19070.42,"recRevImp":-990.05,"recGPImp":2320.34,"recType":"Hold price: no clear improvement"},{"cat":"Service Contracts","seg":"Industrial Accounts","reg":"North","elas":-0.219,"p":0.0,"price":122.86,"recPrice":135.15,"recChg":10.0,"demChg":-2.07,"margin":58.5,"baseRev":26538.66,"baseGP":15526.3,"recRevImp":2050.84,"recGPImp":2278.27,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Service Contracts","seg":"Distributors","reg":"Midwest","elas":-1.0429,"p":0.0,"price":121.24,"recPrice":133.37,"recChg":10.0,"demChg":-9.46,"margin":57.94,"baseRev":63410.41,"baseGP":36742.64,"recRevImp":-258.88,"recGPImp":2264.33,"recType":"Hold price: no clear improvement"},{"cat":"Service Contracts","seg":"Distributors","reg":"Northeast","elas":-1.0054,"p":0.0,"price":121.9,"recPrice":134.09,"recChg":10.0,"demChg":-9.14,"margin":58.17,"baseRev":59000.79,"baseGP":34321.63,"recRevImp":-30.22,"recGPImp":2224.73,"recType":"Hold price: no clear improvement"},{"cat":"Commercial Systems","seg":"Small Business","reg":"West","elas":-1.4961,"p":0.0,"price":116.88,"recPrice":128.57,"recChg":10.0,"demChg":-13.29,"margin":38.93,"baseRev":62415.87,"baseGP":24298.95,"recRevImp":-2882.41,"recGPImp":2182.86,"recType":"Hold price: no clear improvement"},{"cat":"Service Contracts","seg":"Industrial Accounts","reg":"Northeast","elas":-0.2413,"p":0.0027,"price":123.47,"recPrice":135.81,"recChg":10.0,"demChg":-2.27,"margin":58.58,"baseRev":25804.94,"baseGP":15115.36,"recRevImp":1935.07,"recGPImp":2178.08,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Industrial Treatment","seg":"Municipal","reg":"West","elas":-1.2971,"p":0.0,"price":203.15,"recPrice":223.46,"recChg":10.0,"demChg":-11.63,"margin":43.57,"baseRev":57288.46,"baseGP":24959.51,"recRevImp":-1599.36,"recGPImp":2160.01,"recType":"Hold price: no clear improvement"},{"cat":"Service Contracts","seg":"Industrial Accounts","reg":"Midwest","elas":-0.2816,"p":0.0004,"price":123.77,"recPrice":136.14,"recChg":10.0,"demChg":-2.65,"margin":58.82,"baseRev":26115.19,"baseGP":15360.22,"recRevImp":1850.68,"recGPImp":2135.48,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Commercial Systems","seg":"Municipal","reg":"Northeast","elas":-0.7777,"p":0.0,"price":117.75,"recPrice":129.53,"recChg":10.0,"demChg":-7.14,"margin":39.38,"baseRev":31322.28,"baseGP":12335.2,"recRevImp":670.57,"recGPImp":2027.05,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Commercial Systems","seg":"Industrial Accounts","reg":"South","elas":-0.7628,"p":0.0,"price":117.34,"recPrice":129.07,"recChg":10.0,"demChg":-7.01,"margin":39.17,"baseRev":30859.64,"baseGP":12086.7,"recRevImp":705.62,"recGPImp":2021.94,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Commercial Systems","seg":"Industrial Accounts","reg":"West","elas":-0.727,"p":0.0,"price":118.04,"recPrice":129.85,"recChg":10.0,"demChg":-6.69,"margin":39.53,"baseRev":29864.51,"baseGP":11805.37,"recRevImp":787.35,"recGPImp":1996.19,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Service Contracts","seg":"Municipal","reg":"Midwest","elas":-0.5641,"p":0.0,"price":122.94,"recPrice":135.23,"recChg":10.0,"demChg":-5.23,"margin":58.52,"baseRev":28890.45,"baseGP":16907.8,"recRevImp":1225.5,"recGPImp":1852.7,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Commercial Systems","seg":"Homeowners","reg":"West","elas":-1.9064,"p":0.0,"price":112.81,"recPrice":124.09,"recChg":10.0,"demChg":-16.61,"margin":36.72,"baseRev":81446.98,"baseGP":29910.62,"recRevImp":-6740.48,"recGPImp":1821.82,"recType":"Hold price: no clear improvement"},{"cat":"Service Contracts","seg":"Homeowners","reg":"North","elas":-1.1713,"p":0.0,"price":119.78,"recPrice":131.76,"recChg":10.0,"demChg":-10.56,"margin":57.43,"baseRev":58930.69,"baseGP":33843.61,"recRevImp":-954.53,"recGPImp":1695.42,"recType":"Hold price: no clear improvement"},{"cat":"Commercial Systems","seg":"Municipal","reg":"West","elas":-1.2971,"p":0.0,"price":119.41,"recPrice":131.35,"recChg":10.0,"demChg":-11.63,"margin":40.22,"baseRev":39882.91,"baseGP":16041.99,"recRevImp":-1113.44,"recGPImp":1658.9,"recType":"Hold price: no clear improvement"},{"cat":"Service Contracts","seg":"Distributors","reg":"South","elas":-1.2717,"p":0.0,"price":120.83,"recPrice":132.91,"recChg":10.0,"demChg":-11.41,"margin":57.8,"baseRev":71290.68,"baseGP":41206.58,"recRevImp":-1822.56,"recGPImp":1611.43,"recType":"Hold price: no clear improvement"},{"cat":"Service Contracts","seg":"Municipal","reg":"North","elas":-0.7185,"p":0.0,"price":123.02,"recPrice":135.32,"recChg":10.0,"demChg":-6.62,"margin":58.55,"baseRev":29402.44,"baseGP":17215.83,"recRevImp":799.39,"recGPImp":1606.01,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Industrial Treatment","seg":"Homeowners","reg":"West","elas":-1.9064,"p":0.0,"price":196.07,"recPrice":215.68,"recChg":10.0,"demChg":-16.61,"margin":41.53,"baseRev":109211.58,"baseGP":45356.17,"recRevImp":-9038.26,"recGPImp":1570.74,"recType":"Hold price: no clear improvement"},{"cat":"Service Contracts","seg":"Industrial Accounts","reg":"West","elas":-0.727,"p":0.0,"price":123.29,"recPrice":135.62,"recChg":10.0,"demChg":-6.69,"margin":58.64,"baseRev":27124.61,"baseGP":15906.81,"recRevImp":715.12,"recGPImp":1466.01,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Residential Filters","seg":"Distributors","reg":"North","elas":-0.9169,"p":0.0,"price":31.29,"recPrice":34.41,"recChg":10.0,"demChg":-8.37,"margin":33.29,"baseRev":22212.68,"baseGP":7393.8,"recRevImp":176.55,"recGPImp":1416.59,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Service Contracts","seg":"Industrial Accounts","reg":"South","elas":-0.7628,"p":0.0,"price":123.72,"recPrice":136.09,"recChg":10.0,"demChg":-7.01,"margin":58.78,"baseRev":27341.41,"baseGP":16072.62,"recRevImp":625.17,"recGPImp":1415.32,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Service Contracts","seg":"Municipal","reg":"Northeast","elas":-0.7777,"p":0.0,"price":124.73,"recPrice":137.2,"recChg":10.0,"demChg":-7.14,"margin":59.12,"baseRev":27939.76,"baseGP":16518.0,"recRevImp":598.15,"recGPImp":1414.15,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Service Contracts","seg":"Municipal","reg":"South","elas":-0.9381,"p":0.0,"price":124.37,"recPrice":136.81,"recChg":10.0,"demChg":-8.55,"margin":59.0,"baseRev":31589.89,"baseGP":18638.43,"recRevImp":186.93,"recGPImp":1294.61,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Service Contracts","seg":"Small Business","reg":"Northeast","elas":-1.0742,"p":0.0,"price":122.68,"recPrice":134.94,"recChg":10.0,"demChg":-9.73,"margin":58.44,"baseRev":38275.38,"baseGP":22366.5,"recRevImp":-269.59,"recGPImp":1278.47,"recType":"Hold price: no clear improvement"},{"cat":"Service Contracts","seg":"Small Business","reg":"South","elas":-1.2159,"p":0.0,"price":123.13,"recPrice":135.44,"recChg":10.0,"demChg":-10.94,"margin":58.59,"baseRev":50976.78,"baseGP":29866.92,"recRevImp":-1038.01,"recGPImp":1271.75,"recType":"Hold price: no clear improvement"},{"cat":"Residential Filters","seg":"Distributors","reg":"Northeast","elas":-1.0054,"p":0.0,"price":31.03,"recPrice":34.13,"recChg":10.0,"demChg":-9.14,"margin":32.74,"baseRev":20387.96,"baseGP":6675.27,"recRevImp":-10.44,"recGPImp":1242.5,"recType":"Hold price: no clear improvement"},{"cat":"Residential Filters","seg":"Distributors","reg":"South","elas":-1.2717,"p":0.0,"price":31.09,"recPrice":34.2,"recChg":10.0,"demChg":-11.41,"margin":32.86,"baseRev":24124.15,"baseGP":7927.74,"recRevImp":-616.74,"recGPImp":1232.02,"recType":"Hold price: no clear improvement"},{"cat":"Residential Filters","seg":"Distributors","reg":"Midwest","elas":-1.0429,"p":0.0,"price":31.17,"recPrice":34.29,"recChg":10.0,"demChg":-9.46,"margin":33.04,"baseRev":20479.69,"baseGP":6767.01,"recRevImp":-83.61,"recGPImp":1213.84,"recType":"Hold price: no clear improvement"},{"cat":"Service Contracts","seg":"Homeowners","reg":"Northeast","elas":-1.2671,"p":0.0,"price":120.29,"recPrice":132.32,"recChg":10.0,"demChg":-11.38,"margin":57.61,"baseRev":50883.14,"baseGP":29314.37,"recRevImp":-1279.12,"recGPImp":1174.51,"recType":"Hold price: no clear improvement"},{"cat":"Residential Filters","seg":"Homeowners","reg":"North","elas":-1.1713,"p":0.0,"price":30.52,"recPrice":33.57,"recChg":10.0,"demChg":-10.56,"margin":31.61,"baseRev":20021.33,"baseGP":6329.52,"recRevImp":-324.3,"recGPImp":1121.97,"recType":"Hold price: no clear improvement"},{"cat":"Service Contracts","seg":"Homeowners","reg":"Midwest","elas":-1.3334,"p":0.0,"price":119.63,"recPrice":131.59,"recChg":10.0,"demChg":-11.93,"margin":57.38,"baseRev":56943.57,"baseGP":32672.33,"recRevImp":-1780.78,"recGPImp":1115.63,"recType":"Hold price: no clear improvement"},{"cat":"Residential Filters","seg":"Homeowners","reg":"South","elas":-1.5775,"p":0.0,"price":30.8,"recPrice":33.88,"recChg":10.0,"demChg":-13.96,"margin":32.23,"baseRev":26148.69,"baseGP":8428.64,"recRevImp":-1400.23,"recGPImp":1073.24,"recType":"Hold price: no clear improvement"},{"cat":"Residential Filters","seg":"Small Business","reg":"North","elas":-0.7132,"p":0.0,"price":31.08,"recPrice":34.19,"recChg":10.0,"demChg":-6.57,"margin":32.84,"baseRev":14669.32,"baseGP":4817.9,"recRevImp":406.46,"recGPImp":1053.85,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Residential Filters","seg":"Homeowners","reg":"Midwest","elas":-1.3334,"p":0.0,"price":31.07,"recPrice":34.18,"recChg":10.0,"demChg":-11.93,"margin":32.83,"baseRev":20817.64,"baseGP":6833.63,"recRevImp":-651.03,"recGPImp":1017.76,"recType":"Hold price: no clear improvement"},{"cat":"Service Contracts","seg":"Small Business","reg":"Midwest","elas":-1.2124,"p":0.0,"price":123.72,"recPrice":136.09,"recChg":10.0,"demChg":-10.91,"margin":58.79,"baseRev":39838.09,"baseGP":23419.31,"recRevImp":-798.3,"recGPImp":993.35,"recType":"Hold price: no clear improvement"},{"cat":"Residential Filters","seg":"Distributors","reg":"West","elas":-1.5828,"p":0.0,"price":31.17,"recPrice":34.28,"recChg":10.0,"demChg":-14.0,"margin":33.03,"baseRev":24310.98,"baseGP":8031.08,"recRevImp":-1313.54,"recGPImp":966.04,"recType":"Hold price: no clear improvement"},{"cat":"Residential Filters","seg":"Homeowners","reg":"Northeast","elas":-1.2671,"p":0.0,"price":30.83,"recPrice":33.91,"recChg":10.0,"demChg":-11.38,"margin":32.3,"baseRev":18620.51,"baseGP":6014.02,"recRevImp":-468.09,"recGPImp":966.0,"recType":"Hold price: no clear improvement"},{"cat":"Residential Filters","seg":"Small Business","reg":"South","elas":-1.2159,"p":0.0,"price":31.34,"recPrice":34.47,"recChg":10.0,"demChg":-10.94,"margin":33.4,"baseRev":17894.77,"baseGP":5977.05,"recRevImp":-364.38,"recGPImp":939.61,"recType":"Hold price: no clear improvement"},{"cat":"Residential Filters","seg":"Small Business","reg":"Northeast","elas":-1.0742,"p":0.0,"price":31.55,"recPrice":34.71,"recChg":10.0,"demChg":-9.73,"margin":33.85,"baseRev":13189.64,"baseGP":4465.28,"recRevImp":-92.9,"recGPImp":756.05,"recType":"Hold price: no clear improvement"},{"cat":"Residential Filters","seg":"Municipal","reg":"North","elas":-0.7185,"p":0.0,"price":31.63,"recPrice":34.79,"recChg":10.0,"demChg":-6.62,"margin":34.01,"baseRev":10563.57,"baseGP":3592.43,"recRevImp":287.2,"recGPImp":748.61,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Residential Filters","seg":"Small Business","reg":"Midwest","elas":-1.2124,"p":0.0,"price":31.16,"recPrice":34.28,"recChg":10.0,"demChg":-10.91,"margin":33.02,"baseRev":14054.41,"baseGP":4641.29,"recRevImp":-281.63,"recGPImp":745.55,"recType":"Hold price: no clear improvement"},{"cat":"Residential Filters","seg":"Industrial Accounts","reg":"North","elas":-0.219,"p":0.0,"price":31.66,"recPrice":34.83,"recChg":10.0,"demChg":-2.07,"margin":34.08,"baseRev":7915.52,"baseGP":2697.6,"recRevImp":611.69,"recGPImp":719.45,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Service Contracts","seg":"Municipal","reg":"West","elas":-1.2971,"p":0.0,"price":123.9,"recPrice":136.29,"recChg":10.0,"demChg":-11.63,"margin":58.84,"baseRev":35930.15,"baseGP":21143.05,"recRevImp":-1003.08,"recGPImp":716.43,"recType":"Hold price: no clear improvement"},{"cat":"Residential Filters","seg":"Municipal","reg":"South","elas":-0.9381,"p":0.0,"price":31.7,"recPrice":34.87,"recChg":10.0,"demChg":-8.55,"margin":34.15,"baseRev":11474.38,"baseGP":3918.83,"recRevImp":67.9,"recGPImp":714.09,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Residential Filters","seg":"Small Business","reg":"West","elas":-1.4961,"p":0.0,"price":31.59,"recPrice":34.74,"recChg":10.0,"demChg":-13.29,"margin":33.92,"baseRev":16803.71,"baseGP":5699.99,"recRevImp":-776.01,"recGPImp":699.54,"recType":"Hold price: no clear improvement"},{"cat":"Residential Filters","seg":"Municipal","reg":"Midwest","elas":-0.5641,"p":0.0,"price":31.87,"recPrice":35.06,"recChg":10.0,"demChg":-5.23,"margin":34.51,"baseRev":9019.55,"baseGP":3112.87,"recRevImp":382.6,"recGPImp":691.77,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Residential Filters","seg":"Homeowners","reg":"West","elas":-1.9064,"p":0.0,"price":30.94,"recPrice":34.03,"recChg":10.0,"demChg":-16.61,"margin":32.53,"baseRev":23201.53,"baseGP":7547.78,"recRevImp":-1920.14,"recGPImp":680.59,"recType":"Hold price: no clear improvement"},{"cat":"Residential Filters","seg":"Industrial Accounts","reg":"Midwest","elas":-0.2816,"p":0.0004,"price":31.68,"recPrice":34.85,"recChg":10.0,"demChg":-2.65,"margin":34.12,"baseRev":7254.66,"baseGP":2475.04,"recRevImp":514.11,"recGPImp":640.68,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Residential Filters","seg":"Industrial Accounts","reg":"Northeast","elas":-0.2413,"p":0.0027,"price":31.54,"recPrice":34.7,"recChg":10.0,"demChg":-2.27,"margin":33.83,"baseRev":7097.09,"baseGP":2400.97,"recRevImp":532.2,"recGPImp":638.96,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Residential Filters","seg":"Industrial Accounts","reg":"South","elas":-0.7628,"p":0.0,"price":31.68,"recPrice":34.85,"recChg":10.0,"demChg":-7.01,"margin":34.12,"baseRev":8933.98,"baseGP":3048.17,"recRevImp":204.28,"recGPImp":616.98,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Residential Filters","seg":"Industrial Accounts","reg":"West","elas":-0.727,"p":0.0,"price":31.76,"recPrice":34.93,"recChg":10.0,"demChg":-6.69,"margin":34.27,"baseRev":8510.53,"baseGP":2916.92,"recRevImp":224.37,"recGPImp":598.8,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Residential Filters","seg":"Municipal","reg":"Northeast","elas":-0.7777,"p":0.0,"price":31.65,"recPrice":34.81,"recChg":10.0,"demChg":-7.14,"margin":34.05,"baseRev":8671.0,"baseGP":2952.16,"recRevImp":185.63,"recGPImp":594.2,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Residential Filters","seg":"Municipal","reg":"West","elas":-1.2971,"p":0.0,"price":31.75,"recPrice":34.92,"recChg":10.0,"demChg":-11.63,"margin":34.26,"baseRev":11302.37,"baseGP":3872.06,"recRevImp":-315.54,"recGPImp":548.5,"recType":"Hold price: no clear improvement"},{"cat":"Replacement Parts","seg":"Distributors","reg":"North","elas":-0.9169,"p":0.0,"price":10.85,"recPrice":11.93,"recChg":10.0,"demChg":-8.37,"margin":52.26,"baseRev":10426.58,"baseGP":5448.6,"recRevImp":82.87,"recGPImp":499.43,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Service Contracts","seg":"Homeowners","reg":"West","elas":-1.9064,"p":0.0,"price":121.37,"recPrice":109.23,"recChg":-10.0,"demChg":22.24,"margin":57.99,"baseRev":71122.39,"baseGP":41242.25,"recRevImp":7126.62,"recGPImp":480.07,"recType":"Target promotion: elastic segment"},{"cat":"Service Contracts","seg":"Small Business","reg":"West","elas":-1.4961,"p":0.0,"price":123.65,"recPrice":136.01,"recChg":10.0,"demChg":-13.29,"margin":58.76,"baseRev":51684.83,"baseGP":30371.01,"recRevImp":-2386.84,"recGPImp":445.5,"recType":"Hold price: no clear improvement"},{"cat":"Replacement Parts","seg":"Small Business","reg":"North","elas":-0.7132,"p":0.0,"price":10.86,"recPrice":11.94,"recChg":10.0,"demChg":-6.57,"margin":52.29,"baseRev":7252.1,"baseGP":3791.86,"recRevImp":200.94,"recGPImp":428.33,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Replacement Parts","seg":"Distributors","reg":"Northeast","elas":-1.0054,"p":0.0,"price":10.77,"recPrice":11.85,"recChg":10.0,"demChg":-9.14,"margin":51.9,"baseRev":9562.44,"baseGP":4962.6,"recRevImp":-4.9,"recGPImp":415.39,"recType":"Hold price: no clear improvement"},{"cat":"Replacement Parts","seg":"Distributors","reg":"Midwest","elas":-1.0429,"p":0.0,"price":10.69,"recPrice":11.76,"recChg":10.0,"demChg":-9.46,"margin":51.56,"baseRev":9634.03,"baseGP":4966.85,"recRevImp":-39.33,"recGPImp":402.26,"recType":"Hold price: no clear improvement"},{"cat":"Service Contracts","seg":"Homeowners","reg":"South","elas":-1.5775,"p":0.0,"price":120.66,"recPrice":132.73,"recChg":10.0,"demChg":-13.96,"margin":57.74,"baseRev":71433.21,"baseGP":41247.13,"recRevImp":-3825.17,"recGPImp":388.39,"recType":"Hold price: no clear improvement"},{"cat":"Replacement Parts","seg":"Distributors","reg":"South","elas":-1.2717,"p":0.0,"price":10.69,"recPrice":11.75,"recChg":10.0,"demChg":-11.41,"margin":51.52,"baseRev":12822.17,"baseGP":6606.17,"recRevImp":-327.8,"recGPImp":381.73,"recType":"Hold price: no clear improvement"},{"cat":"Replacement Parts","seg":"Industrial Accounts","reg":"North","elas":-0.219,"p":0.0,"price":11.01,"recPrice":12.11,"recChg":10.0,"demChg":-2.07,"margin":52.95,"baseRev":3952.59,"baseGP":2092.97,"recRevImp":305.45,"recGPImp":343.85,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Replacement Parts","seg":"Municipal","reg":"Midwest","elas":-0.5641,"p":0.0,"price":10.89,"recPrice":11.98,"recChg":10.0,"demChg":-5.23,"margin":52.42,"baseRev":5029.6,"baseGP":2636.44,"recRevImp":213.35,"recGPImp":338.61,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Replacement Parts","seg":"Homeowners","reg":"North","elas":-1.1713,"p":0.0,"price":10.6,"recPrice":11.66,"recChg":10.0,"demChg":-10.56,"margin":51.13,"baseRev":9135.92,"baseGP":4670.76,"recRevImp":-147.98,"recGPImp":323.68,"recType":"Hold price: no clear improvement"},{"cat":"Replacement Parts","seg":"Industrial Accounts","reg":"Midwest","elas":-0.2816,"p":0.0004,"price":11.01,"recPrice":12.11,"recChg":10.0,"demChg":-2.65,"margin":52.95,"baseRev":3820.33,"baseGP":2022.87,"recRevImp":270.73,"recGPImp":318.33,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Replacement Parts","seg":"Industrial Accounts","reg":"Northeast","elas":-0.2413,"p":0.0027,"price":11.05,"recPrice":12.15,"recChg":10.0,"demChg":-2.27,"margin":53.11,"baseRev":3679.05,"baseGP":1954.11,"recRevImp":275.89,"recGPImp":315.1,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Service Contracts","seg":"Distributors","reg":"West","elas":-1.5828,"p":0.0,"price":122.06,"recPrice":134.26,"recChg":10.0,"demChg":-14.0,"margin":58.22,"baseRev":70304.45,"baseGP":40934.21,"recRevImp":-3798.61,"recGPImp":313.94,"recType":"Hold price: no clear improvement"},{"cat":"Replacement Parts","seg":"Municipal","reg":"North","elas":-0.7185,"p":0.0,"price":10.92,"recPrice":12.02,"recChg":10.0,"demChg":-6.62,"margin":52.59,"baseRev":5156.51,"baseGP":2711.55,"recRevImp":140.2,"recGPImp":302.02,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Replacement Parts","seg":"Municipal","reg":"South","elas":-0.9381,"p":0.0,"price":11.0,"recPrice":12.1,"recChg":10.0,"demChg":-8.55,"margin":52.89,"baseRev":6091.56,"baseGP":3221.84,"recRevImp":36.05,"recGPImp":281.48,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Replacement Parts","seg":"Small Business","reg":"South","elas":-1.2159,"p":0.0,"price":10.87,"recPrice":11.95,"recChg":10.0,"demChg":-10.94,"margin":52.34,"baseRev":8835.65,"baseGP":4624.31,"recRevImp":-179.92,"recGPImp":280.87,"recType":"Hold price: no clear improvement"},{"cat":"Replacement Parts","seg":"Homeowners","reg":"Northeast","elas":-1.2671,"p":0.0,"price":10.58,"recPrice":11.64,"recChg":10.0,"demChg":-11.38,"margin":51.03,"baseRev":9065.95,"baseGP":4626.69,"recRevImp":-227.9,"recGPImp":277.1,"recType":"Hold price: no clear improvement"},{"cat":"Replacement Parts","seg":"Industrial Accounts","reg":"South","elas":-0.7628,"p":0.0,"price":11.03,"recPrice":12.14,"recChg":10.0,"demChg":-7.01,"margin":53.05,"baseRev":4733.24,"baseGP":2511.02,"recRevImp":108.23,"recGPImp":264.05,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Replacement Parts","seg":"Small Business","reg":"Northeast","elas":-1.0742,"p":0.0,"price":10.87,"recPrice":11.96,"recChg":10.0,"demChg":-9.73,"margin":52.35,"baseRev":6664.08,"baseGP":3488.74,"recRevImp":-46.94,"recGPImp":262.05,"recType":"Hold price: no clear improvement"},{"cat":"Replacement Parts","seg":"Industrial Accounts","reg":"West","elas":-0.727,"p":0.0,"price":11.0,"recPrice":12.1,"recChg":10.0,"demChg":-6.69,"margin":52.9,"baseRev":4432.53,"baseGP":2344.99,"recRevImp":116.86,"recGPImp":256.59,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Replacement Parts","seg":"Municipal","reg":"Northeast","elas":-0.7777,"p":0.0,"price":10.92,"recPrice":12.01,"recChg":10.0,"demChg":-7.14,"margin":52.57,"baseRev":4598.02,"baseGP":2417.24,"recRevImp":98.44,"recGPImp":254.24,"recType":"Increase price: low elasticity / pricing power"},{"cat":"Replacement Parts","seg":"Small Business","reg":"Midwest","elas":-1.2124,"p":0.0,"price":10.79,"recPrice":11.87,"recChg":10.0,"demChg":-10.91,"margin":51.99,"baseRev":7391.28,"baseGP":3842.98,"recRevImp":-148.11,"recGPImp":239.09,"recType":"Hold price: no clear improvement"},{"cat":"Replacement Parts","seg":"Homeowners","reg":"Midwest","elas":-1.3334,"p":0.0,"price":10.67,"recPrice":11.74,"recChg":10.0,"demChg":-11.93,"margin":51.46,"baseRev":8740.4,"baseGP":4497.98,"recRevImp":-273.34,"recGPImp":232.93,"recType":"Hold price: no clear improvement"},{"cat":"Replacement Parts","seg":"Distributors","reg":"West","elas":-1.5828,"p":0.0,"price":10.75,"recPrice":11.82,"recChg":10.0,"demChg":-14.0,"margin":51.81,"baseRev":12275.92,"baseGP":6360.36,"recRevImp":-663.28,"recGPImp":165.04,"recType":"Hold price: no clear improvement"},{"cat":"Replacement Parts","seg":"Municipal","reg":"West","elas":-1.2971,"p":0.0,"price":11.03,"recPrice":12.13,"recChg":10.0,"demChg":-11.63,"margin":53.03,"baseRev":5779.14,"baseGP":3064.82,"recRevImp":-161.34,"recGPImp":154.29,"recType":"Hold price: no clear improvement"},{"cat":"Replacement Parts","seg":"Homeowners","reg":"South","elas":-1.5775,"p":0.0,"price":10.77,"recPrice":11.85,"recChg":10.0,"demChg":-13.96,"margin":51.9,"baseRev":11069.8,"baseGP":5744.76,"recRevImp":-592.78,"recGPImp":150.53,"recType":"Hold price: no clear improvement"},{"cat":"Replacement Parts","seg":"Small Business","reg":"West","elas":-1.4961,"p":0.0,"price":10.88,"recPrice":11.97,"recChg":10.0,"demChg":-13.29,"margin":52.4,"baseRev":7965.28,"baseGP":4173.52,"recRevImp":-367.84,"recGPImp":136.04,"recType":"Hold price: no clear improvement"},{"cat":"Replacement Parts","seg":"Homeowners","reg":"West","elas":-1.9064,"p":0.0,"price":10.58,"recPrice":10.89,"recChg":2.98,"demChg":-5.45,"margin":51.04,"baseRev":11510.18,"baseGP":5874.34,"recRevImp":-302.72,"recGPImp":4.51,"recType":"Hold price: no clear improvement"}];
+
+const ELAS = {
+  overall: -1.0073,
+  segment: [
+    {name:'Homeowners', e:-1.4485},
+    {name:'Distributors', e:-1.1690},
+    {name:'Small Business', e:-1.1377},
+    {name:'Municipal', e:-0.8550},
+    {name:'Industrial Accounts', e:-0.4553}
+  ],
+  region: [
+    {name:'West', e:-1.4450},
+    {name:'South', e:-1.1318},
+    {name:'Midwest', e:-0.9011},
+    {name:'Northeast', e:-0.8487},
+    {name:'North', e:-0.7336}
+  ],
+  category: [
+    {name:'Residential Filters', e:-1.6068},
+    {name:'Commercial Systems', e:-1.0745},
+    {name:'Replacement Parts', e:-0.8919},
+    {name:'Service Contracts', e:-0.8402},
+    {name:'Industrial Treatment', e:-0.6204}
+  ]
+};
+
+const MARGIN_FLOOR = 30;
+
+function uniq(key){ return [...new Set(DATA.map(r=>r[key]))].sort(); }
+const CATS = uniq('cat'), SEGS = uniq('seg'), REGS = uniq('reg');
+
+function fillSelect(el, values){
+  el.innerHTML = '<option value="__ALL__">All</option>' + values.map(v=>`<option value="${v}">${v}</option>`).join('');
+}
+fillSelect(document.getElementById('selCat'), CATS);
+fillSelect(document.getElementById('selSeg'), SEGS);
+fillSelect(document.getElementById('selReg'), REGS);
+
+function fmtUSD(n){
+  const sign = n<0 ? '-':'';
+  const abs = Math.abs(n);
+  return sign + '$' + abs.toLocaleString(undefined,{maximumFractionDigits:0});
+}
+function fmtPct(n, digits=1){
+  const sign = n>0?'+':'';
+  return sign + n.toFixed(digits) + '%';
+}
+
+function currentFilter(){
+  return {
+    cat: document.getElementById('selCat').value,
+    seg: document.getElementById('selSeg').value,
+    reg: document.getElementById('selReg').value
+  };
+}
+function filteredRows(){
+  const f = currentFilter();
+  return DATA.filter(r =>
+    (f.cat==='__ALL__' || r.cat===f.cat) &&
+    (f.seg==='__ALL__' || r.seg===f.seg) &&
+    (f.reg==='__ALL__' || r.reg===f.reg)
+  );
+}
+
+// Core simulation math — mirrors src/optimization.py:
+// new_demand = current_demand * (new_price/current_price)^elasticity
+function computeAt(rows, pctChange){
+  let baseRev=0, baseGP=0, newRev=0, newGP=0, baseUnitsSum=0, newUnitsSum=0, minMargin=100;
+  for(const r of rows){
+    const cost = r.price * (1 - r.margin/100);
+    const baseUnits = r.baseRev / r.price;
+    const newPrice = r.price * (1 + pctChange/100);
+    const mult = Math.pow(newPrice / r.price, r.elas);
+    const newUnits = baseUnits * mult;
+    const rowNewRev = newPrice * newUnits;
+    const rowNewCost = cost * newUnits;
+    const rowNewGP = rowNewRev - rowNewCost;
+    const rowMargin = rowNewRev > 0 ? (rowNewGP / rowNewRev) * 100 : 100;
+    baseRev += r.baseRev; baseGP += r.baseGP;
+    newRev += rowNewRev; newGP += rowNewGP;
+    baseUnitsSum += baseUnits; newUnitsSum += newUnits;
+    if(rowMargin < minMargin) minMargin = rowMargin;
+  }
+  return {
+    baseRev, baseGP, newRev, newGP,
+    revImp: newRev-baseRev, gpImp: newGP-baseGP,
+    revImpPct: baseRev? (newRev-baseRev)/baseRev*100 : 0,
+    gpImpPct: baseGP? (newGP-baseGP)/baseGP*100 : 0,
+    demandChgPct: baseUnitsSum? (newUnitsSum-baseUnitsSum)/baseUnitsSum*100 : 0,
+    minMargin
+  };
+}
+
+let impactChart, chartSeg, chartReg, chartCat;
+
+function renderKPIs(){
+  const all = computeAt(DATA, 0); // baseline
+  const totalBaseRev = all.baseRev, totalBaseGP = all.baseGP;
+  const optRevImp = DATA.reduce((s,r)=>s+r.recRevImp,0);
+  const optGPImp = DATA.reduce((s,r)=>s+r.recGPImp,0);
+  const optRevPct = optRevImp/totalBaseRev*100;
+  const optGPPct = optGPImp/totalBaseGP*100;
+
+  const kpis = [
+    {label:'Overall own-price elasticity', value: ELAS.overall.toFixed(2), note:'Robust SE, log-log fixed-effects model'},
+    {label:'Baseline annual revenue', value: fmtUSD(totalBaseRev), note:'125 category × segment × region cells'},
+    {label:'Baseline gross profit', value: fmtUSD(totalBaseGP), note:''},
+    {label:'Full optimizer — revenue', value: fmtPct(optRevPct), cls: optRevPct>=0?'good':'bad', note: fmtUSD(optRevImp)+' vs. baseline'},
+    {label:'Full optimizer — gross profit', value: fmtPct(optGPPct), cls: optGPPct>=0?'good':'bad', note: fmtUSD(optGPImp)+' vs. baseline'}
+  ];
+  document.getElementById('kpiGrid').innerHTML = kpis.map(k=>`
+    <div class="kpi">
+      <div class="label">${k.label}</div>
+      <div class="value ${k.cls||''}">${k.value}</div>
+      <div class="note">${k.note}</div>
+    </div>`).join('');
+}
+
+function bestRecommendationLabel(rows){
+  if(rows.length===0) return {cls:'hold', text:'No data'};
+  if(rows.length===1){
+    const r = rows[0];
+    const cls = r.recType.startsWith('Increase') ? 'inc' : (r.recType.startsWith('Target') ? 'promo' : 'hold');
+    return {cls, text:`${r.recType} · model recommends ${fmtPct(r.recChg)} (${r.price.toFixed(2)} → ${r.recPrice.toFixed(2)})`};
+  }
+  const weighted = rows.reduce((s,r)=>s+r.recChg*r.baseRev,0) / rows.reduce((s,r)=>s+r.baseRev,0);
+  const cls = weighted>0.5?'inc':(weighted<-0.5?'promo':'hold');
+  return {cls, text:`Blended model recommendation across ${rows.length} cells: ${fmtPct(weighted)} average price move`};
+}
+
+function weightedRecommendedPct(rows){
+  const totalRev = rows.reduce((s,r)=>s+r.baseRev,0);
+  if(!totalRev) return 0;
+  return rows.reduce((s,r)=>s+r.recChg*r.baseRev,0) / totalRev;
+}
+
+function renderResults(){
+  const rows = filteredRows();
+  const pct = parseFloat(document.getElementById('slider').value);
+  document.getElementById('pctDisplay').textContent = fmtPct(pct);
+  const res = computeAt(rows, pct);
+
+  const cells = [
+    {label:'New avg. demand change', value: fmtPct(res.demandChgPct), cls: res.demandChgPct>=0?'good':'bad'},
+    {label:'Revenue impact', value: fmtUSD(res.revImp)+ ' ('+fmtPct(res.revImpPct)+')', cls: res.revImp>=0?'good':'bad'},
+    {label:'Gross profit impact', value: fmtUSD(res.gpImp)+' ('+fmtPct(res.gpImpPct)+')', cls: res.gpImp>=0?'good':'bad'},
+    {label:'Resulting gross margin', value: res.minMargin.toFixed(1)+'% (min in selection)', cls: res.minMargin<MARGIN_FLOOR?'bad':'good'},
+    {label:'Baseline revenue (selection)', value: fmtUSD(res.baseRev), cls:''},
+    {label:'Baseline gross profit (selection)', value: fmtUSD(res.baseGP), cls:''}
+  ];
+  document.getElementById('resultsGrid').innerHTML = cells.map(c=>`
+    <div class="result-cell">
+      <div class="label">${c.label}</div>
+      <div class="value ${c.cls}">${c.value}</div>
+    </div>`).join('');
+
+  const rec = bestRecommendationLabel(rows);
+  document.getElementById('recBadge').innerHTML = `<span class="rec-badge ${rec.cls}">${rec.text}</span>`;
+
+  document.getElementById('warnBanner').style.display = res.minMargin < MARGIN_FLOOR ? 'block' : 'none';
+
+  updateImpactChart(rows, pct);
+}
+
+function updateImpactChart(rows, currentPct){
+  const xs = [];
+  for(let x=-10; x<=10; x+=1) xs.push(x);
+  const revSeries = xs.map(x=>computeAt(rows,x).revImp);
+  const gpSeries = xs.map(x=>computeAt(rows,x).gpImp);
+  const curRev = computeAt(rows, currentPct).revImp;
+  const curGP = computeAt(rows, currentPct).gpImp;
+
+  if(impactChart){
+    impactChart.data.labels = xs.map(x=>x+'%');
+    impactChart.data.datasets[0].data = revSeries;
+    impactChart.data.datasets[1].data = gpSeries;
+    impactChart.data.datasets[2].data = xs.map(x=> x===roundToHalf(currentPct) ? curRev : null);
+    impactChart.data.datasets[3].data = xs.map(x=> x===roundToHalf(currentPct) ? curGP : null);
+    impactChart.update();
+  } else {
+    const ctx = document.getElementById('impactChart');
+    impactChart = new Chart(ctx, {
+      type:'line',
+      data:{
+        labels: xs.map(x=>x+'%'),
+        datasets:[
+          {label:'Revenue impact ($)', data:revSeries, borderColor:'#38bdf8', backgroundColor:'rgba(56,189,248,.08)', tension:.25, pointRadius:0, borderWidth:2, fill:true},
+          {label:'Gross profit impact ($)', data:gpSeries, borderColor:'#34d399', backgroundColor:'rgba(52,211,153,.08)', tension:.25, pointRadius:0, borderWidth:2, fill:true},
+          {label:'Current (rev)', data:xs.map(x=>null), borderColor:'#38bdf8', pointBackgroundColor:'#fff', pointBorderColor:'#38bdf8', pointRadius:6, showLine:false},
+          {label:'Current (GP)', data:xs.map(x=>null), borderColor:'#34d399', pointBackgroundColor:'#fff', pointBorderColor:'#34d399', pointRadius:6, showLine:false}
+        ]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        interaction:{mode:'index', intersect:false},
+        plugins:{ legend:{labels:{color:'#cdd8e8', boxWidth:12, font:{size:11}}} },
+        scales:{
+          x:{ ticks:{color:'#8ea0bd', font:{size:10}}, grid:{color:'rgba(255,255,255,.05)'} },
+          y:{ ticks:{color:'#8ea0bd', font:{size:10}, callback:v=>'$'+v.toLocaleString()}, grid:{color:'rgba(255,255,255,.05)'} }
+        }
+      }
+    });
+  }
+}
+function roundToHalf(x){ return Math.round(x); }
+
+function renderElasticityCharts(){
+  function mkBar(canvasId, arr){
+    const ctx = document.getElementById(canvasId);
+    return new Chart(ctx, {
+      type:'bar',
+      data:{
+        labels: arr.map(a=>a.name),
+        datasets:[{
+          data: arr.map(a=>a.e),
+          backgroundColor: arr.map(a=> a.e <= -1 ? 'rgba(248,113,113,.65)' : 'rgba(52,211,153,.65)'),
+          borderRadius:5
+        }]
+      },
+      options:{
+        indexAxis:'y',
+        responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{display:false}},
+        scales:{
+          x:{ ticks:{color:'#8ea0bd', font:{size:10}}, grid:{color:'rgba(255,255,255,.05)'} },
+          y:{ ticks:{color:'#cdd8e8', font:{size:11}}, grid:{display:false} }
+        }
+      }
+    });
+  }
+  chartSeg = mkBar('chartSeg', ELAS.segment);
+  chartReg = mkBar('chartReg', ELAS.region);
+  chartCat = mkBar('chartCat', ELAS.category);
+}
+
+function renderOppTable(){
+  const top = [...DATA].sort((a,b)=>b.recGPImp-a.recGPImp).slice(0,10);
+  document.getElementById('oppTable').innerHTML = top.map(r=>{
+    const actionCls = r.recType.startsWith('Increase') ? 'good' : (r.recType.startsWith('Target') ? '' : '');
+    return `<tr data-cat="${r.cat}" data-seg="${r.seg}" data-reg="${r.reg}" data-pct="${r.recChg}">
+      <td>${r.cat}</td><td>${r.seg}</td><td>${r.reg}</td>
+      <td>${r.recType.split(':')[0]}</td>
+      <td class="num">${r.price.toFixed(2)} → ${r.recPrice.toFixed(2)}</td>
+      <td class="num ${r.demChg>=0?'good':'bad'}">${fmtPct(r.demChg)}</td>
+      <td class="num good">${fmtUSD(r.recGPImp)}</td>
+    </tr>`;
+  }).join('');
+
+  document.querySelectorAll('#oppTable tr').forEach(tr=>{
+    tr.addEventListener('click', ()=>{
+      document.getElementById('selCat').value = tr.dataset.cat;
+      document.getElementById('selSeg').value = tr.dataset.seg;
+      document.getElementById('selReg').value = tr.dataset.reg;
+      document.getElementById('slider').value = tr.dataset.pct;
+      renderResults();
+      document.querySelector('section h2').scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+}
+
+['selCat','selSeg','selReg'].forEach(id=>{
+  document.getElementById(id).addEventListener('change', renderResults);
+});
+document.getElementById('slider').addEventListener('input', renderResults);
+document.getElementById('btnApplyRec').addEventListener('click', ()=>{
+  const rows = filteredRows();
+  const pct = weightedRecommendedPct(rows);
+  document.getElementById('slider').value = Math.max(-10, Math.min(10, pct)).toFixed(1);
+  renderResults();
+});
+document.getElementById('btnReset').addEventListener('click', ()=>{
+  document.getElementById('slider').value = 0;
+  renderResults();
+});
+
+renderKPIs();
+renderElasticityCharts();
+renderOppTable();
+renderResults();
+</script>
+</body>
+</html>

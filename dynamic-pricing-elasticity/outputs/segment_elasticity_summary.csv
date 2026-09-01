@@ -1,0 +1,6 @@
+customer_segment,elasticity,std_error,p_value,n_obs,is_elastic,cluster_name
+Distributors,-1.1690031182709313,0.017952555283672338,0.0,5400,True,Stable High-Margin Customers
+Homeowners,-1.4484872420632158,0.01773675858447115,0.0,5400,True,Promotion-Responsive Buyers
+Industrial Accounts,-0.455314480495003,0.04169843389722477,9.329090445185521e-28,5387,False,Premium / Service-Oriented Buyers
+Municipal,-0.8549601908856541,0.02477115991584544,4.888740775155313e-261,5400,False,Premium / Service-Oriented Buyers
+Small Business,-1.1376768125588217,0.02219524378983327,0.0,5400,True,Low-Volume Opportunistic Buyers
